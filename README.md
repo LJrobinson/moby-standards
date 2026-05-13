@@ -23,6 +23,7 @@ MOBY Standards maps those inputs to one canonical value:
 {
   "canonical": "3.5g"
 }
+```
 
 ## Current Scope
 
