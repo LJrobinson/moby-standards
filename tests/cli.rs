@@ -14,6 +14,48 @@ fn validates_standards_data() {
 }
 
 #[test]
+fn lists_weights() {
+    let mut cmd = Command::cargo_bin("moby-standards").unwrap();
+
+    cmd.args(["list", "weights"])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("3.5g"));
+}
+
+#[test]
+fn lists_categories() {
+    let mut cmd = Command::cargo_bin("moby-standards").unwrap();
+
+    cmd.args(["list", "categories"])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("flower - Flower"));
+}
+
+#[test]
+fn lists_units() {
+    let mut cmd = Command::cargo_bin("moby-standards").unwrap();
+
+    cmd.args(["list", "units"])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("percent - percent (potency)"));
+}
+
+#[test]
+fn lists_product_types() {
+    let mut cmd = Command::cargo_bin("moby-standards").unwrap();
+
+    cmd.args(["list", "product-types"])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains(
+            "infused_pre_roll - Infused Pre-Roll [pre_roll]",
+        ));
+}
+
+#[test]
 fn normalizes_eighth_to_three_point_five_grams() {
     let mut cmd = Command::cargo_bin("moby-standards").unwrap();
 
@@ -133,6 +175,16 @@ fn lists_potency_units() {
 }
 
 #[test]
+fn lists_potency_fields() {
+    let mut cmd = Command::cargo_bin("moby-standards").unwrap();
+
+    cmd.args(["list", "potency-fields"])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("total_thc - Total THC"));
+}
+
+#[test]
 fn normalizes_total_potential_thc_to_total_thc() {
     let mut cmd = Command::cargo_bin("moby-standards").unwrap();
 
@@ -225,19 +277,31 @@ fn export_typescript_outputs_type_definitions() {
         predicate::str::contains("export type")
             .and(predicate::str::contains("export interface StandardWeight"))
             .and(predicate::str::contains("export interface AliasEntry"))
-            .and(predicate::str::contains("export interface NormalizeResult")),
+            .and(predicate::str::contains("export interface NormalizeResult"))
+            .and(predicate::str::contains("export interface StandardsBundle")),
     );
 }
 
 #[test]
-fn export_json_still_outputs_standards_bundle() {
+fn export_json_outputs_parseable_standards_bundle() {
     let mut cmd = Command::cargo_bin("moby-standards").unwrap();
 
-    cmd.arg("export-json").assert().success().stdout(
-        predicate::str::contains("\"weights\"")
-            .and(predicate::str::contains("\"categories\""))
-            .and(predicate::str::contains("\"product_types\"")),
-    );
+    let output = cmd.arg("export-json").output().unwrap();
+
+    assert!(output.status.success());
+    let bundle: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
+    assert!(bundle.get("weights").is_some());
+    assert!(bundle.get("categories").is_some());
+    assert!(bundle.get("units").is_some());
+    assert!(bundle.get("product_types").is_some());
+    assert!(bundle.get("package_sizes").is_some());
+    assert!(bundle.get("potency_fields").is_some());
+    assert!(bundle.get("potency_units").is_some());
+    assert!(bundle.get("weight_aliases").is_some());
+    assert!(bundle.get("category_aliases").is_some());
+    assert!(bundle.get("product_type_aliases").is_some());
+    assert!(bundle.get("package_size_aliases").is_some());
+    assert!(bundle.get("potency_field_aliases").is_some());
 }
 
 #[test]

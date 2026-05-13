@@ -1,5 +1,20 @@
 # MOBY Standards Progress Log
 
+## v1.0.0 - Canonical Cannabis Data Standard
+
+Status: complete.
+
+Implemented:
+
+- stable key policy documentation for weights, categories, product types, units, potency fields, potency units, and package-size tokens
+- output contract documentation for normalization, aliases, optional source metadata, export-json, export-schema, export-typescript, and state package-size extensions
+- canonical `percent` unit key alignment between general units and potency units
+- additional CLI tests for list commands and machine-readable exports
+- focused validation tests for duplicate keys, broken alias references, and product type category references
+- package version bump to `1.0.0`
+
+Note: State package-size overrides remain framework/example extensions unless reconciled with MOBY Atlas source-cited state truth.
+
 ## v0.7.0 - MOBY JSON Schema Export
 
 Status: complete.

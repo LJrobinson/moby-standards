@@ -2,7 +2,7 @@
 
 Canonical cannabis data standards for MOBY.
 
-`moby-standards` v0.7.0 provides a Rust CLI and YAML-backed registries for canonical cannabis weights, package sizes, categories, units, product types, potency fields, potency units, aliases, source metadata, state-aware standards extensions, and machine-readable exports.
+`moby-standards` v1.0.0 is the first stable Canonical Cannabis Data Standard for MOBY. It provides a Rust CLI and YAML-backed registries for canonical cannabis weights, package sizes, categories, units, product types, potency fields, potency units, aliases, source metadata, state-aware standards extensions, and machine-readable exports.
 
 It is designed to help cannabis data tools convert messy POS, compliance, menu, COA, and state-specific source data into consistent MOBY-compatible output.
 
@@ -26,6 +26,15 @@ MOBY Standards maps known aliases to one canonical value:
 ```
 
 ## Current Scope
+
+v1.0.0 Canonical Cannabis Data Standard is complete and stabilizes:
+
+- standard key policies for weights, categories, product types, units, package sizes, potency fields, and potency units
+- MOBY-compatible output contracts for normalization and export commands
+- optional alias source metadata shape
+- state extension shape for package-size overrides
+- canonical `percent` unit key across general units and potency units
+- CLI and validation coverage for the stable registries
 
 v0.1.0 Framework is complete and includes:
 
@@ -93,6 +102,12 @@ The loaded YAML registries currently include canonical weights, package sizes, c
 
 Other MOBY projects can consume the standards bundle directly as JSON, validate expected shape with the JSON Schema export, or use the TypeScript definitions as application-level contracts.
 
+Stable keys are documented in [docs/standard-keys.md](docs/standard-keys.md). Output shapes are documented in [docs/output-contracts.md](docs/output-contracts.md).
+
+For v1.0.0, weight `label` is the stable weight identifier, while categories, product types, units, potency fields, and potency units use `key`. Package sizes use string tokens scoped by category. Package-size tokens may represent mass, serving potency, or package potency depending on category context.
+
+CLI command names are user-facing and hyphenated, such as `product-type`, `package-size`, and `potency-field`. Export bundle keys are machine-facing and snake_case, such as `product_types`, `package_sizes`, and `potency_fields`.
+
 ## Commands
 
 List canonical weights:
@@ -113,7 +128,7 @@ List canonical units:
 cargo run -- list units
 ```
 
-List starter product types:
+List canonical product types:
 
 ```bash
 cargo run -- list product-types
@@ -124,6 +139,8 @@ List package sizes for a category:
 ```bash
 cargo run -- list package-sizes flower
 ```
+
+Package-size list and normalize commands require a category because package sizes are category-aware.
 
 List potency fields:
 
@@ -142,6 +159,8 @@ Show a state package-size extension:
 ```bash
 cargo run -- state NV package-sizes flower
 ```
+
+State package-size commands require both a state and category because state extensions are state-aware and category-aware. The included NV extension is framework/example data unless reconciled with MOBY Atlas source-cited state truth.
 
 Normalize a weight:
 

@@ -11,7 +11,7 @@ units:
     label: "ounce"
     dimension: "mass"
 
-  - key: "%"
+  - key: "percent"
     label: "percent"
     dimension: "potency"
 

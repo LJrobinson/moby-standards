@@ -476,8 +476,14 @@ fn load_state_package_size_overrides(
 
 #[cfg(test)]
 mod tests {
-    use super::validate_alias_source;
-    use crate::models::{AliasEntry, AliasSource};
+    use super::{validate_alias_source, Registry};
+    use crate::models::{
+        AliasEntry, AliasRegistry, AliasSource, CategoryRegistry, PackageSizeRegistry,
+        PotencyFieldRegistry, PotencyUnitRegistry, ProductTypeRegistry, StandardCategory,
+        StandardPotencyField, StandardPotencyUnit, StandardProductType, StandardUnit,
+        StandardWeight, UnitRegistry, WeightRegistry,
+    };
+    use std::collections::BTreeMap;
 
     fn alias_with_source(source: AliasSource) -> AliasEntry {
         AliasEntry {
@@ -485,6 +491,60 @@ mod tests {
             canonical: "canonical".to_string(),
             confidence: "high".to_string(),
             source: Some(source),
+        }
+    }
+
+    fn valid_registry() -> Registry {
+        Registry {
+            weights: WeightRegistry {
+                weights: vec![StandardWeight {
+                    label: "1g".to_string(),
+                    grams: 1.0,
+                    category_hint: vec!["flower".to_string()],
+                }],
+            },
+            categories: CategoryRegistry {
+                categories: vec![StandardCategory {
+                    key: "flower".to_string(),
+                    label: "Flower".to_string(),
+                    description: "Usable cannabis flower.".to_string(),
+                }],
+            },
+            units: UnitRegistry {
+                units: vec![StandardUnit {
+                    key: "percent".to_string(),
+                    label: "percent".to_string(),
+                    dimension: "potency".to_string(),
+                }],
+            },
+            product_types: ProductTypeRegistry {
+                product_types: vec![StandardProductType {
+                    key: "cured_flower".to_string(),
+                    category: "flower".to_string(),
+                    label: "Cured Flower".to_string(),
+                }],
+            },
+            package_sizes: PackageSizeRegistry {
+                package_sizes: BTreeMap::new(),
+            },
+            potency_fields: PotencyFieldRegistry {
+                potency_fields: vec![StandardPotencyField {
+                    key: "thc".to_string(),
+                    label: "THC".to_string(),
+                }],
+            },
+            potency_units: PotencyUnitRegistry {
+                potency_units: vec![StandardPotencyUnit {
+                    key: "percent".to_string(),
+                    label: "percent".to_string(),
+                }],
+            },
+            state_package_sizes: BTreeMap::new(),
+            weight_aliases: AliasRegistry { aliases: vec![] },
+            category_aliases: AliasRegistry { aliases: vec![] },
+            product_type_aliases: AliasRegistry { aliases: vec![] },
+            package_size_aliases: AliasRegistry { aliases: vec![] },
+            potency_field_aliases: AliasRegistry { aliases: vec![] },
         }
     }
 
@@ -510,5 +570,38 @@ mod tests {
         });
 
         assert!(validate_alias_source("Test alias", &alias).is_err());
+    }
+
+    #[test]
+    fn rejects_duplicate_category_keys() {
+        let mut registry = valid_registry();
+        registry.categories.categories.push(StandardCategory {
+            key: "flower".to_string(),
+            label: "Duplicate Flower".to_string(),
+            description: "Duplicate category for validation test.".to_string(),
+        });
+
+        assert!(registry.validate().is_err());
+    }
+
+    #[test]
+    fn rejects_broken_weight_alias_reference() {
+        let mut registry = valid_registry();
+        registry.weight_aliases.aliases.push(AliasEntry {
+            input: "missing".to_string(),
+            canonical: "missing_weight".to_string(),
+            confidence: "high".to_string(),
+            source: None,
+        });
+
+        assert!(registry.validate().is_err());
+    }
+
+    #[test]
+    fn rejects_broken_product_type_category_reference() {
+        let mut registry = valid_registry();
+        registry.product_types.product_types[0].category = "missing_category".to_string();
+
+        assert!(registry.validate().is_err());
     }
 }
