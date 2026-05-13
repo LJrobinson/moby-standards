@@ -9,7 +9,10 @@ use registry::Registry;
 
 #[derive(Parser)]
 #[command(name = "moby-standards")]
-#[command(about = "Canonical cannabis data standards for MOBY")]
+#[command(about = "Canonical YAML-backed cannabis standards for MOBY")]
+#[command(
+    long_about = "Canonical YAML-backed cannabis standards for MOBY.\n\nv0.1.0 supports listing registries, normalizing weight/category aliases, validating YAML data, and exporting loaded standards as JSON."
+)]
 #[command(version)]
 struct Cli {
     #[command(subcommand)]
@@ -18,25 +21,27 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
-    /// List canonical standards.
+    /// List canonical standards from the loaded YAML registries.
     List {
+        /// Registry to list.
         #[arg(value_enum)]
         kind: ListKind,
     },
 
-    /// Normalize messy cannabis input into MOBY standards.
+    /// Normalize a weight or category alias into MOBY standards.
     Normalize {
+        /// Value kind to normalize.
         #[arg(value_enum)]
         kind: NormalizeKind,
 
-        /// Raw value to normalize.
+        /// Raw weight or category value to normalize.
         input: String,
     },
 
-    /// Validate standards and aliases.
+    /// Validate YAML standards and aliases for internal consistency.
     Validate,
 
-    /// Export all loaded registries as JSON.
+    /// Export all loaded standards and aliases as JSON.
     ExportJson,
 }
 

@@ -2,7 +2,7 @@
 
 Canonical cannabis data standards for MOBY.
 
-`moby-standards` defines normalized cannabis product language for names, weights, sizes, categories, product types, units, and aliases.
+`moby-standards` v0.1.0 provides a Rust CLI and YAML-backed registries for canonical cannabis weights, categories, units, starter product types, and aliases.
 
 It is designed to help cannabis data tools convert messy POS, compliance, menu, COA, and state-specific source data into consistent MOBY-compatible output.
 
@@ -13,11 +13,11 @@ Cannabis data is messy.
 Different systems may describe the same thing in different ways:
 
 - `eighth`
+- `1/8`
 - `1/8 oz`
-- `3.5 grams`
-- `3.5g`
+- `eighth ounce`
 
-MOBY Standards maps those inputs to one canonical value:
+MOBY Standards maps known aliases to one canonical value:
 
 ```json
 {
@@ -27,19 +27,18 @@ MOBY Standards maps those inputs to one canonical value:
 
 ## Current Scope
 
-v0.1.0 includes:
+v0.1.0 Framework is complete and includes:
 
-- canonical weights
-- weight aliases
-- canonical product categories
-- category aliases
-- canonical units
-- starter product types
-- CLI listing
-- CLI normalization
-- validation of reference data
+- Rust CLI initialized
+- YAML-backed standards
+- Weight normalization
+- Category normalization
+- Validation command
+- JSON export command
 
-Commands
+The loaded YAML registries currently include canonical weights, categories, units, starter product types, weight aliases, and category aliases.
+
+## Commands
 
 List canonical weights:
 
@@ -51,6 +50,18 @@ List canonical categories:
 
 ```bash
 cargo run -- list categories
+```
+
+List canonical units:
+
+```bash
+cargo run -- list units
+```
+
+List starter product types:
+
+```bash
+cargo run -- list product-types
 ```
 
 Normalize a weight:
@@ -65,13 +76,13 @@ Normalize a category:
 cargo run -- normalize category cart
 ```
 
-Validate standards data:
+Validate standards and aliases:
 
 ```bash
 cargo run -- validate
 ```
 
-Export all loaded standards as JSON:
+Export all loaded standards and aliases as JSON:
 
 ```bash
 cargo run -- export-json

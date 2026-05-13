@@ -2,21 +2,23 @@
 
 ## v0.1.0 - Framework
 
-Initialized MOBY Standards as a Rust CLI and YAML-backed canonical cannabis reference project.
+Status: complete.
 
 Implemented:
 
-- canonical weights
-- canonical categories
-- canonical units
-- starter product types
-- weight aliases
-- category aliases
-- list commands
-- normalize commands
-- validation command
+- Rust CLI initialized
+- YAML-backed standards
+- Weight normalization
+- Category normalization
+- Validation command
 - JSON export command
-- CLI tests
+
+Supporting framework pieces:
+
+- canonical weights, categories, units, and starter product types
+- weight and category aliases
+- list commands for loaded registries
+- CLI tests for validation and normalization behavior
 
 ## Design Notes
 
