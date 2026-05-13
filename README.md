@@ -2,7 +2,7 @@
 
 Canonical cannabis data standards for MOBY.
 
-`moby-standards` v0.4.0 provides a Rust CLI and YAML-backed registries for canonical cannabis weights, package sizes, categories, units, product types, potency fields, potency units, and aliases.
+`moby-standards` v0.5.0 provides a Rust CLI and YAML-backed registries for canonical cannabis weights, package sizes, categories, units, product types, potency fields, potency units, aliases, and state-aware standards extensions.
 
 It is designed to help cannabis data tools convert messy POS, compliance, menu, COA, and state-specific source data into consistent MOBY-compatible output.
 
@@ -59,13 +59,22 @@ v0.4.0 Potency Units is complete and adds:
 - potency field/unit listing
 - validation that potency-field aliases point to canonical potency fields
 
+v0.5.0 State Overrides is complete and adds:
+
+- state-specific standards folder support
+- starter NV package-size override example
+- state-aware package-size listing
+- validation for state override categories, recognized weights, state codes, and source confidence
+
 Canonical weights are global. Package sizes are category-aware.
 
 For example, `3.5g` is a canonical weight and a recognized flower package size. `0.5g` is a recognized vape, concentrate, and pre-roll package size. `100mg_package` is an edible package-size token, not a mass weight.
 
 Potency fields are canonical field names for cannabinoid and terpene values. For example, `Total Potential THC` normalizes to `total_thc`, while `Delta-9 THC` normalizes to `thc`.
 
-The loaded YAML registries currently include canonical weights, package sizes, categories, units, product types, potency fields, potency units, weight aliases, category aliases, product-type aliases, package-size aliases, and potency-field aliases.
+State overrides are state-specific MOBY Standards extensions that can reference or align with MOBY Atlas. MOBY Atlas remains the state-by-state source truth; MOBY Standards does not become a legal database. The included NV package-size override is a starter framework example and should be reconciled with MOBY Atlas source-cited state data before being treated as official.
+
+The loaded YAML registries currently include canonical weights, package sizes, categories, units, product types, potency fields, potency units, state package-size overrides, weight aliases, category aliases, product-type aliases, package-size aliases, and potency-field aliases.
 
 ## Commands
 
@@ -109,6 +118,12 @@ List potency units:
 
 ```bash
 cargo run -- list potency-units
+```
+
+Show a state package-size extension:
+
+```bash
+cargo run -- state NV package-sizes flower
 ```
 
 Normalize a weight:

@@ -1,0 +1,12 @@
+state: NV
+categories:
+  flower:
+    package_context: prepacked
+    recognized_weights:
+      - 1g
+      - 3.5g
+      - 7g
+      - 14g
+      - 28g
+    source_confidence: medium
+    source_note: "Starter state-aware example. Should be reconciled with MOBY Atlas source-cited state data before being treated as official."

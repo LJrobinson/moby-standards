@@ -52,6 +52,19 @@ enum Commands {
     /// Validate YAML standards and aliases for internal consistency.
     Validate,
 
+    /// Show state-specific standards extensions.
+    State {
+        /// State code, such as NV.
+        state: String,
+
+        /// State-aware registry to inspect.
+        #[arg(value_enum)]
+        kind: StateKind,
+
+        /// Canonical category key.
+        category: String,
+    },
+
     /// Export all loaded standards and aliases as JSON.
     ExportJson,
 }
@@ -74,6 +87,11 @@ enum NormalizeKind {
     ProductType,
     PackageSize,
     PotencyField,
+}
+
+#[derive(Copy, Clone, Debug, ValueEnum)]
+enum StateKind {
+    PackageSizes,
 }
 
 fn main() -> Result<()> {
@@ -172,6 +190,36 @@ fn main() -> Result<()> {
             println!("OK: MOBY standards data is valid.");
         }
 
+        Commands::State {
+            state,
+            kind,
+            category,
+        } => match kind {
+            StateKind::PackageSizes => {
+                let state = state.to_uppercase();
+                let Some(override_data) = registry.state_package_sizes.get(&state) else {
+                    anyhow::bail!("No state package-size override found for state '{}'", state);
+                };
+                let Some(state_category) = override_data.categories.get(&category) else {
+                    anyhow::bail!(
+                        "No package-size override for state '{}' category '{}'",
+                        state,
+                        category
+                    );
+                };
+
+                println!("State: {}", override_data.state);
+                println!("Category: {}", category);
+                println!("Package context: {}", state_category.package_context);
+                println!("Recognized weights:");
+                for weight in &state_category.recognized_weights {
+                    println!("- {}", weight);
+                }
+                println!("Source confidence: {}", state_category.source_confidence);
+                println!("Source note: {}", state_category.source_note);
+            }
+        },
+
         Commands::ExportJson => {
             let export = serde_json::json!({
                 "weights": registry.weights.weights,
@@ -181,6 +229,7 @@ fn main() -> Result<()> {
                 "package_sizes": registry.package_sizes.package_sizes,
                 "potency_fields": registry.potency_fields.potency_fields,
                 "potency_units": registry.potency_units.potency_units,
+                "state_package_sizes": registry.state_package_sizes,
                 "weight_aliases": registry.weight_aliases.aliases,
                 "category_aliases": registry.category_aliases.aliases,
                 "product_type_aliases": registry.product_type_aliases.aliases,

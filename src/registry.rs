@@ -1,11 +1,13 @@
 use anyhow::{Context, Result};
 use serde::de::DeserializeOwned;
-use std::collections::HashSet;
+use std::collections::{BTreeMap, HashSet};
 use std::fs;
+use std::path::Path;
 
 use crate::models::{
     AliasRegistry, CategoryRegistry, PackageSizeRegistry, PotencyFieldRegistry,
-    PotencyUnitRegistry, ProductTypeRegistry, UnitRegistry, WeightRegistry,
+    PotencyUnitRegistry, ProductTypeRegistry, StatePackageSizeOverride, UnitRegistry,
+    WeightRegistry,
 };
 
 pub struct Registry {
@@ -16,6 +18,7 @@ pub struct Registry {
     pub package_sizes: PackageSizeRegistry,
     pub potency_fields: PotencyFieldRegistry,
     pub potency_units: PotencyUnitRegistry,
+    pub state_package_sizes: BTreeMap<String, StatePackageSizeOverride>,
     pub weight_aliases: AliasRegistry,
     pub category_aliases: AliasRegistry,
     pub product_type_aliases: AliasRegistry,
@@ -33,6 +36,7 @@ impl Registry {
             package_sizes: load_yaml("data/standards/package-sizes.yaml")?,
             potency_fields: load_yaml("data/standards/potency-fields.yaml")?,
             potency_units: load_yaml("data/standards/potency-units.yaml")?,
+            state_package_sizes: load_state_package_size_overrides("data/states")?,
             weight_aliases: load_yaml("data/aliases/weights.yaml")?,
             category_aliases: load_yaml("data/aliases/categories.yaml")?,
             product_type_aliases: load_yaml("data/aliases/product-types.yaml")?,
@@ -314,6 +318,76 @@ impl Registry {
             }
         }
 
+        for (state, override_data) in &self.state_package_sizes {
+            if state.trim().is_empty() {
+                anyhow::bail!("State package-size override has empty state code");
+            }
+            if override_data.state.trim().is_empty() {
+                anyhow::bail!("State package-size override has missing state field");
+            }
+
+            for (category, state_category) in &override_data.categories {
+                if category.trim().is_empty() {
+                    anyhow::bail!("State '{}' has empty package-size category", state);
+                }
+                if !category_keys.contains(category.as_str()) {
+                    anyhow::bail!(
+                        "State '{}' package-size category '{}' is not canonical",
+                        state,
+                        category
+                    );
+                }
+                if state_category.package_context.trim().is_empty() {
+                    anyhow::bail!(
+                        "State '{}' category '{}' has empty package context",
+                        state,
+                        category
+                    );
+                }
+                if state_category.source_confidence.trim().is_empty() {
+                    anyhow::bail!(
+                        "State '{}' category '{}' has empty source confidence",
+                        state,
+                        category
+                    );
+                }
+                if state_category.source_note.trim().is_empty() {
+                    anyhow::bail!(
+                        "State '{}' category '{}' has empty source note",
+                        state,
+                        category
+                    );
+                }
+
+                let mut recognized_weights = HashSet::new();
+                for weight in &state_category.recognized_weights {
+                    if weight.trim().is_empty() {
+                        anyhow::bail!(
+                            "State '{}' category '{}' has empty recognized weight",
+                            state,
+                            category
+                        );
+                    }
+                    if !recognized_weights.insert(weight.as_str()) {
+                        anyhow::bail!(
+                            "State '{}' category '{}' has duplicate recognized weight '{}'",
+                            state,
+                            category,
+                            weight
+                        );
+                    }
+                    if !weight_labels.contains(weight.as_str()) {
+                        anyhow::bail!(
+                            "State '{}' category '{}' recognized weight '{}' is not canonical",
+                            state,
+                            category,
+                            weight
+                        );
+                    }
+                }
+            }
+        }
+
         Ok(())
     }
 }
@@ -329,6 +403,50 @@ fn load_yaml<T>(path: &str) -> Result<T>
 where
     T: DeserializeOwned,
 {
-    let raw = fs::read_to_string(path).with_context(|| format!("Failed to read {}", path))?;
-    serde_yaml::from_str(&raw).with_context(|| format!("Failed to parse {}", path))
+    load_yaml_path(Path::new(path))
+}
+
+fn load_yaml_path<T>(path: &Path) -> Result<T>
+where
+    T: DeserializeOwned,
+{
+    let raw =
+        fs::read_to_string(path).with_context(|| format!("Failed to read {}", path.display()))?;
+    serde_yaml::from_str(&raw).with_context(|| format!("Failed to parse {}", path.display()))
+}
+
+fn load_state_package_size_overrides(
+    root: &str,
+) -> Result<BTreeMap<String, StatePackageSizeOverride>> {
+    let mut overrides = BTreeMap::new();
+    let root_path = Path::new(root);
+
+    if !root_path.exists() {
+        return Ok(overrides);
+    }
+
+    for entry in fs::read_dir(root_path).with_context(|| format!("Failed to read {}", root))? {
+        let entry = entry.with_context(|| format!("Failed to read entry in {}", root))?;
+        if !entry
+            .file_type()
+            .with_context(|| format!("Failed to inspect {}", entry.path().display()))?
+            .is_dir()
+        {
+            continue;
+        }
+
+        let path = entry.path().join("package-sizes.yaml");
+        if !path.exists() {
+            continue;
+        }
+
+        let override_data: StatePackageSizeOverride = load_yaml_path(&path)?;
+        let state = override_data.state.to_uppercase();
+
+        if overrides.insert(state.clone(), override_data).is_some() {
+            anyhow::bail!("Duplicate state package-size override for '{}'", state);
+        }
+    }
+
+    Ok(overrides)
 }

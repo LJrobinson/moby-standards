@@ -71,6 +71,20 @@ pub struct StandardPotencyUnit {
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
+pub struct StatePackageSizeOverride {
+    pub state: String,
+    pub categories: BTreeMap<String, StatePackageSizeCategory>,
+}
+
+#[derive(Debug, Deserialize, Serialize, Clone)]
+pub struct StatePackageSizeCategory {
+    pub package_context: String,
+    pub recognized_weights: Vec<String>,
+    pub source_confidence: String,
+    pub source_note: String,
+}
+
+#[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct StandardProductType {
     pub key: String,
     pub category: String,

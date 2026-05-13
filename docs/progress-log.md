@@ -1,5 +1,19 @@
 # MOBY Standards Progress Log
 
+## v0.5.0 - State Overrides
+
+Status: complete.
+
+Implemented:
+
+- state-specific standards folder support
+- starter NV package-size override example
+- state-aware package-size command
+- validation for state override categories, recognized weights, state codes, source confidence, and parseable files
+- CLI tests for NV package-size output, validation, and invalid state/category requests
+
+Note: The NV package-size override is a starter framework example. It should be reconciled with MOBY Atlas source-cited state data before being treated as official.
+
 ## v0.4.0 - Potency Units
 
 Status: complete.

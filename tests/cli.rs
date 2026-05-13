@@ -140,6 +140,33 @@ fn normalizes_total_terpenes_to_total_terpenes() {
 }
 
 #[test]
+fn lists_nv_flower_package_size_override() {
+    let mut cmd = Command::cargo_bin("moby-standards").unwrap();
+
+    cmd.args(["state", "NV", "package-sizes", "flower"])
+        .assert()
+        .success()
+        .stdout(
+            predicate::str::contains("State: NV")
+                .and(predicate::str::contains("Category: flower"))
+                .and(predicate::str::contains("Package context: prepacked"))
+                .and(predicate::str::contains("3.5g")),
+        );
+}
+
+#[test]
+fn unknown_state_override_request_fails_with_useful_error() {
+    let mut cmd = Command::cargo_bin("moby-standards").unwrap();
+
+    cmd.args(["state", "NV", "package-sizes", "edible"])
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains(
+            "No package-size override for state 'NV' category 'edible'",
+        ));
+}
+
+#[test]
 fn normalizes_infused_joint_to_infused_pre_roll() {
     let mut cmd = Command::cargo_bin("moby-standards").unwrap();
 
