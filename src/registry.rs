@@ -14,6 +14,7 @@ pub struct Registry {
     pub product_types: ProductTypeRegistry,
     pub weight_aliases: AliasRegistry,
     pub category_aliases: AliasRegistry,
+    pub product_type_aliases: AliasRegistry,
 }
 
 impl Registry {
@@ -25,6 +26,7 @@ impl Registry {
             product_types: load_yaml("data/standards/product-types.yaml")?,
             weight_aliases: load_yaml("data/aliases/weights.yaml")?,
             category_aliases: load_yaml("data/aliases/categories.yaml")?,
+            product_type_aliases: load_yaml("data/aliases/product-types.yaml")?,
         })
     }
 
@@ -150,6 +152,32 @@ impl Registry {
             if !category_keys.contains(alias.canonical.as_str()) {
                 anyhow::bail!(
                     "Category alias '{}' points to missing canonical category '{}'",
+                    alias.input,
+                    alias.canonical
+                );
+            }
+        }
+
+        let mut product_type_alias_inputs = HashSet::new();
+        for alias in &self.product_type_aliases.aliases {
+            if alias.input.trim().is_empty() {
+                anyhow::bail!("Product type alias has empty input");
+            }
+            if alias.canonical.trim().is_empty() {
+                anyhow::bail!(
+                    "Product type alias '{}' has empty canonical value",
+                    alias.input
+                );
+            }
+            if alias.confidence.trim().is_empty() {
+                anyhow::bail!("Product type alias '{}' has empty confidence", alias.input);
+            }
+            if !product_type_alias_inputs.insert(alias.input.as_str()) {
+                anyhow::bail!("Duplicate product type alias input '{}'", alias.input);
+            }
+            if !product_type_keys.contains(alias.canonical.as_str()) {
+                anyhow::bail!(
+                    "Product type alias '{}' points to missing canonical product type '{}'",
                     alias.input,
                     alias.canonical
                 );

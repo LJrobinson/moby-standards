@@ -2,7 +2,7 @@
 
 Canonical cannabis data standards for MOBY.
 
-`moby-standards` v0.1.0 provides a Rust CLI and YAML-backed registries for canonical cannabis weights, categories, units, starter product types, and aliases.
+`moby-standards` v0.2.0 provides a Rust CLI and YAML-backed registries for canonical cannabis weights, categories, units, product types, and aliases.
 
 It is designed to help cannabis data tools convert messy POS, compliance, menu, COA, and state-specific source data into consistent MOBY-compatible output.
 
@@ -36,7 +36,13 @@ v0.1.0 Framework is complete and includes:
 - Validation command
 - JSON export command
 
-The loaded YAML registries currently include canonical weights, categories, units, starter product types, weight aliases, and category aliases.
+v0.2.0 Product Type Aliases is complete and adds:
+
+- product-type aliases
+- product-type normalization
+- validation that product-type aliases point to canonical product types
+
+The loaded YAML registries currently include canonical weights, categories, units, product types, weight aliases, category aliases, and product-type aliases.
 
 ## Commands
 
@@ -76,6 +82,14 @@ Normalize a category:
 cargo run -- normalize category cart
 ```
 
+Normalize a product type:
+
+```bash
+cargo run -- normalize product-type "infused joint"
+```
+
+The normalize kind determines the registry used. For example, `normalize category cart` returns `vape`, while `normalize product-type cart` returns `vape_cartridge`.
+
 Validate standards and aliases:
 
 ```bash
@@ -95,6 +109,18 @@ Example Output
   "input": "eighth",
   "kind": "weight",
   "canonical": "3.5g",
+  "confidence": "high",
+  "matched": true
+}
+```
+
+Product Type Example Output
+
+```bash
+{
+  "input": "infused joint",
+  "kind": "product-type",
+  "canonical": "infused_pre_roll",
   "confidence": "high",
   "matched": true
 }

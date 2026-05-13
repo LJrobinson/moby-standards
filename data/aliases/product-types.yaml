@@ -1,0 +1,64 @@
+aliases:
+  - input: "infused joint"
+    canonical: "infused_pre_roll"
+    confidence: "high"
+
+  - input: "infused pre roll"
+    canonical: "infused_pre_roll"
+    confidence: "high"
+
+  - input: "infused pre-roll"
+    canonical: "infused_pre_roll"
+    confidence: "high"
+
+  - input: "disposable vape"
+    canonical: "vape_disposable"
+    confidence: "high"
+
+  - input: "vape disposable"
+    canonical: "vape_disposable"
+    confidence: "high"
+
+  - input: "cart"
+    canonical: "vape_cartridge"
+    confidence: "high"
+
+  - input: "cartridge"
+    canonical: "vape_cartridge"
+    confidence: "high"
+
+  - input: "live rosin"
+    canonical: "live_rosin"
+    confidence: "high"
+
+  - input: "live resin"
+    canonical: "live_resin"
+    confidence: "high"
+
+  - input: "popcorn"
+    canonical: "popcorn_flower"
+    confidence: "high"
+
+  - input: "popcorn flower"
+    canonical: "popcorn_flower"
+    confidence: "high"
+
+  - input: "shake"
+    canonical: "shake"
+    confidence: "high"
+
+  - input: "trim"
+    canonical: "trim"
+    confidence: "high"
+
+  - input: "gummy"
+    canonical: "gummy"
+    confidence: "high"
+
+  - input: "gummies"
+    canonical: "gummy"
+    confidence: "high"
+
+  - input: "chocolate"
+    canonical: "chocolate"
+    confidence: "high"

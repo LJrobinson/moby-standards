@@ -1,5 +1,16 @@
 # MOBY Standards Progress Log
 
+## v0.2.0 - Product Type Aliases
+
+Status: complete.
+
+Implemented:
+
+- product-type aliases
+- product-type normalization
+- validation that product-type aliases point to canonical product types
+- CLI tests for product-type normalization and unmatched product-type input
+
 ## v0.1.0 - Framework
 
 Status: complete.

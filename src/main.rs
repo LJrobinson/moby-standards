@@ -4,14 +4,14 @@ mod registry;
 
 use anyhow::Result;
 use clap::{Parser, Subcommand, ValueEnum};
-use normalize::{normalize_category, normalize_weight};
+use normalize::{normalize_category, normalize_product_type, normalize_weight};
 use registry::Registry;
 
 #[derive(Parser)]
 #[command(name = "moby-standards")]
 #[command(about = "Canonical YAML-backed cannabis standards for MOBY")]
 #[command(
-    long_about = "Canonical YAML-backed cannabis standards for MOBY.\n\nv0.1.0 supports listing registries, normalizing weight/category aliases, validating YAML data, and exporting loaded standards as JSON."
+    long_about = "Canonical YAML-backed cannabis standards for MOBY.\n\nSupports listing registries, normalizing weight/category/product-type aliases, validating YAML data, and exporting loaded standards as JSON."
 )]
 #[command(version)]
 struct Cli {
@@ -28,13 +28,13 @@ enum Commands {
         kind: ListKind,
     },
 
-    /// Normalize a weight or category alias into MOBY standards.
+    /// Normalize a weight, category, or product type alias into MOBY standards.
     Normalize {
         /// Value kind to normalize.
         #[arg(value_enum)]
         kind: NormalizeKind,
 
-        /// Raw weight or category value to normalize.
+        /// Raw weight, category, or product type value to normalize.
         input: String,
     },
 
@@ -57,6 +57,7 @@ enum ListKind {
 enum NormalizeKind {
     Weight,
     Category,
+    ProductType,
 }
 
 fn main() -> Result<()> {
@@ -94,6 +95,7 @@ fn main() -> Result<()> {
             let result = match kind {
                 NormalizeKind::Weight => normalize_weight(&registry, &input),
                 NormalizeKind::Category => normalize_category(&registry, &input),
+                NormalizeKind::ProductType => normalize_product_type(&registry, &input),
             };
 
             println!("{}", serde_json::to_string_pretty(&result)?);
@@ -112,6 +114,7 @@ fn main() -> Result<()> {
                 "product_types": registry.product_types.product_types,
                 "weight_aliases": registry.weight_aliases.aliases,
                 "category_aliases": registry.category_aliases.aliases,
+                "product_type_aliases": registry.product_type_aliases.aliases,
             });
 
             println!("{}", serde_json::to_string_pretty(&export)?);

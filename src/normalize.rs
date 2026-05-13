@@ -9,6 +9,14 @@ pub fn normalize_category(registry: &Registry, input: &str) -> NormalizeResult {
     normalize_alias("category", &registry.category_aliases.aliases, input)
 }
 
+pub fn normalize_product_type(registry: &Registry, input: &str) -> NormalizeResult {
+    normalize_alias(
+        "product-type",
+        &registry.product_type_aliases.aliases,
+        input,
+    )
+}
+
 fn normalize_alias(kind: &str, aliases: &[AliasEntry], input: &str) -> NormalizeResult {
     let normalized_input = normalize_text(input);
 
