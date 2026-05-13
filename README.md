@@ -105,6 +105,9 @@ MOBY Standards
 
 MOBY Normalizers
   Translate messy source data into clean MOBY-compatible data
+
+---
+
 Example
 
 Nevada might describe flower as:
