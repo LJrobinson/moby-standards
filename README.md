@@ -2,7 +2,7 @@
 
 Canonical cannabis data standards for MOBY.
 
-`moby-standards` v0.2.0 provides a Rust CLI and YAML-backed registries for canonical cannabis weights, categories, units, product types, and aliases.
+`moby-standards` v0.3.0 provides a Rust CLI and YAML-backed registries for canonical cannabis weights, package sizes, categories, units, product types, and aliases.
 
 It is designed to help cannabis data tools convert messy POS, compliance, menu, COA, and state-specific source data into consistent MOBY-compatible output.
 
@@ -42,7 +42,19 @@ v0.2.0 Product Type Aliases is complete and adds:
 - product-type normalization
 - validation that product-type aliases point to canonical product types
 
-The loaded YAML registries currently include canonical weights, categories, units, product types, weight aliases, category aliases, and product-type aliases.
+v0.3.0 Package Size Standards is complete and adds:
+
+- category-aware package-size standards
+- package-size aliases
+- package-size listing by category
+- package-size normalization by category
+- validation that package-size categories and gram-based package sizes are canonical
+
+Canonical weights are global. Package sizes are category-aware.
+
+For example, `3.5g` is a canonical weight and a recognized flower package size. `0.5g` is a recognized vape, concentrate, and pre-roll package size. `100mg_package` is an edible package-size token, not a mass weight.
+
+The loaded YAML registries currently include canonical weights, package sizes, categories, units, product types, weight aliases, category aliases, product-type aliases, and package-size aliases.
 
 ## Commands
 
@@ -70,6 +82,12 @@ List starter product types:
 cargo run -- list product-types
 ```
 
+List package sizes for a category:
+
+```bash
+cargo run -- list package-sizes flower
+```
+
 Normalize a weight:
 
 ```bash
@@ -86,6 +104,16 @@ Normalize a product type:
 
 ```bash
 cargo run -- normalize product-type "infused joint"
+```
+
+Normalize a package size within a category:
+
+```bash
+cargo run -- normalize package-size flower eighth
+```
+
+```bash
+cargo run -- normalize package-size edible "100mg package"
 ```
 
 The normalize kind determines the registry used. For example, `normalize category cart` returns `vape`, while `normalize product-type cart` returns `vape_cartridge`.
@@ -121,6 +149,18 @@ Product Type Example Output
   "input": "infused joint",
   "kind": "product-type",
   "canonical": "infused_pre_roll",
+  "confidence": "high",
+  "matched": true
+}
+```
+
+Package Size Example Output
+
+```bash
+{
+  "input": "eighth",
+  "kind": "package-size",
+  "canonical": "3.5g",
   "confidence": "high",
   "matched": true
 }

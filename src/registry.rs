@@ -4,7 +4,8 @@ use std::collections::HashSet;
 use std::fs;
 
 use crate::models::{
-    AliasRegistry, CategoryRegistry, ProductTypeRegistry, UnitRegistry, WeightRegistry,
+    AliasRegistry, CategoryRegistry, PackageSizeRegistry, ProductTypeRegistry, UnitRegistry,
+    WeightRegistry,
 };
 
 pub struct Registry {
@@ -12,9 +13,11 @@ pub struct Registry {
     pub categories: CategoryRegistry,
     pub units: UnitRegistry,
     pub product_types: ProductTypeRegistry,
+    pub package_sizes: PackageSizeRegistry,
     pub weight_aliases: AliasRegistry,
     pub category_aliases: AliasRegistry,
     pub product_type_aliases: AliasRegistry,
+    pub package_size_aliases: AliasRegistry,
 }
 
 impl Registry {
@@ -24,9 +27,11 @@ impl Registry {
             categories: load_yaml("data/standards/categories.yaml")?,
             units: load_yaml("data/standards/units.yaml")?,
             product_types: load_yaml("data/standards/product-types.yaml")?,
+            package_sizes: load_yaml("data/standards/package-sizes.yaml")?,
             weight_aliases: load_yaml("data/aliases/weights.yaml")?,
             category_aliases: load_yaml("data/aliases/categories.yaml")?,
             product_type_aliases: load_yaml("data/aliases/product-types.yaml")?,
+            package_size_aliases: load_yaml("data/aliases/package-sizes.yaml")?,
         })
     }
 
@@ -184,8 +189,82 @@ impl Registry {
             }
         }
 
+        let mut package_size_tokens = HashSet::new();
+        for (category, sizes) in &self.package_sizes.package_sizes {
+            if category.trim().is_empty() {
+                anyhow::bail!("Package size category has empty key");
+            }
+            if !category_keys.contains(category.as_str()) {
+                anyhow::bail!(
+                    "Package size category '{}' is not a canonical category",
+                    category
+                );
+            }
+
+            let mut category_sizes = HashSet::new();
+            for size in sizes {
+                if size.trim().is_empty() {
+                    anyhow::bail!("Package size category '{}' has empty size", category);
+                }
+                if !category_sizes.insert(size.as_str()) {
+                    anyhow::bail!(
+                        "Duplicate package size '{}' in category '{}'",
+                        size,
+                        category
+                    );
+                }
+                if is_gram_size_token(size) && !weight_labels.contains(size.as_str()) {
+                    anyhow::bail!(
+                        "Package size '{}' in category '{}' is not a canonical weight",
+                        size,
+                        category
+                    );
+                }
+                if !is_gram_size_token(size) && category != "edible" {
+                    anyhow::bail!(
+                        "Non-gram package size '{}' is only supported for edible packages",
+                        size
+                    );
+                }
+                package_size_tokens.insert(size.as_str());
+            }
+        }
+
+        let mut package_size_alias_inputs = HashSet::new();
+        for alias in &self.package_size_aliases.aliases {
+            if alias.input.trim().is_empty() {
+                anyhow::bail!("Package size alias has empty input");
+            }
+            if alias.canonical.trim().is_empty() {
+                anyhow::bail!(
+                    "Package size alias '{}' has empty canonical value",
+                    alias.input
+                );
+            }
+            if alias.confidence.trim().is_empty() {
+                anyhow::bail!("Package size alias '{}' has empty confidence", alias.input);
+            }
+            if !package_size_alias_inputs.insert(alias.input.as_str()) {
+                anyhow::bail!("Duplicate package size alias input '{}'", alias.input);
+            }
+            if !package_size_tokens.contains(alias.canonical.as_str()) {
+                anyhow::bail!(
+                    "Package size alias '{}' points to missing package size '{}'",
+                    alias.input,
+                    alias.canonical
+                );
+            }
+        }
+
         Ok(())
     }
+}
+
+fn is_gram_size_token(value: &str) -> bool {
+    value
+        .strip_suffix('g')
+        .and_then(|number| number.parse::<f64>().ok())
+        .is_some()
 }
 
 fn load_yaml<T>(path: &str) -> Result<T>

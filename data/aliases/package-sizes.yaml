@@ -1,0 +1,32 @@
+aliases:
+  - input: "eighth"
+    canonical: "3.5g"
+    confidence: "high"
+
+  - input: "1/8 oz"
+    canonical: "3.5g"
+    confidence: "high"
+
+  - input: "quarter"
+    canonical: "7g"
+    confidence: "high"
+
+  - input: "half ounce"
+    canonical: "14g"
+    confidence: "high"
+
+  - input: "ounce"
+    canonical: "28g"
+    confidence: "high"
+
+  - input: "half gram"
+    canonical: "0.5g"
+    confidence: "high"
+
+  - input: "100mg package"
+    canonical: "100mg_package"
+    confidence: "high"
+
+  - input: "10mg serving"
+    canonical: "10mg_serving"
+    confidence: "high"

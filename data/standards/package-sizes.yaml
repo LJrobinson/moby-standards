@@ -1,0 +1,32 @@
+package_sizes:
+  flower:
+    - "1g"
+    - "3.5g"
+    - "7g"
+    - "14g"
+    - "28g"
+    - "56g"
+    - "70g"
+
+  vape:
+    - "0.3g"
+    - "0.5g"
+    - "1g"
+    - "2g"
+
+  concentrate:
+    - "0.5g"
+    - "1g"
+    - "2g"
+    - "3.5g"
+
+  edible:
+    - "10mg_serving"
+    - "100mg_package"
+
+  pre_roll:
+    - "0.5g"
+    - "1g"
+    - "1.5g"
+    - "2g"
+    - "3.5g"

@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use std::collections::BTreeMap;
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct WeightRegistry {
@@ -40,6 +41,11 @@ pub struct StandardUnit {
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct ProductTypeRegistry {
     pub product_types: Vec<StandardProductType>,
+}
+
+#[derive(Debug, Deserialize, Serialize, Clone)]
+pub struct PackageSizeRegistry {
+    pub package_sizes: BTreeMap<String, Vec<String>>,
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone)]

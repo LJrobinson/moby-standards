@@ -17,6 +17,43 @@ pub fn normalize_product_type(registry: &Registry, input: &str) -> NormalizeResu
     )
 }
 
+pub fn normalize_package_size(registry: &Registry, category: &str, input: &str) -> NormalizeResult {
+    let Some(category_sizes) = registry.package_sizes.package_sizes.get(category) else {
+        return unmatched("package-size", input);
+    };
+
+    let normalized_input = normalize_text(input);
+    let matched_alias = registry
+        .package_size_aliases
+        .aliases
+        .iter()
+        .find(|alias| normalize_text(&alias.input) == normalized_input);
+
+    let matched = match matched_alias {
+        Some(alias) => Some((alias.canonical.clone(), alias.confidence.clone())),
+        None => category_sizes
+            .iter()
+            .find(|size| normalize_text(size) == normalized_input)
+            .map(|size| (size.clone(), "high".to_string())),
+    };
+
+    let Some((canonical, confidence)) = matched else {
+        return unmatched("package-size", input);
+    };
+
+    if category_sizes.iter().any(|size| size == &canonical) {
+        NormalizeResult {
+            input: input.to_string(),
+            kind: "package-size".to_string(),
+            canonical: Some(canonical),
+            confidence: Some(confidence),
+            matched: true,
+        }
+    } else {
+        unmatched("package-size", input)
+    }
+}
+
 fn normalize_alias(kind: &str, aliases: &[AliasEntry], input: &str) -> NormalizeResult {
     let normalized_input = normalize_text(input);
 
@@ -32,13 +69,17 @@ fn normalize_alias(kind: &str, aliases: &[AliasEntry], input: &str) -> Normalize
             confidence: Some(alias.confidence.clone()),
             matched: true,
         },
-        None => NormalizeResult {
-            input: input.to_string(),
-            kind: kind.to_string(),
-            canonical: None,
-            confidence: None,
-            matched: false,
-        },
+        None => unmatched(kind, input),
+    }
+}
+
+fn unmatched(kind: &str, input: &str) -> NormalizeResult {
+    NormalizeResult {
+        input: input.to_string(),
+        kind: kind.to_string(),
+        canonical: None,
+        confidence: None,
+        matched: false,
     }
 }
 

@@ -1,5 +1,18 @@
 # MOBY Standards Progress Log
 
+## v0.3.0 - Package Size Standards
+
+Status: complete.
+
+Implemented:
+
+- category-aware package-size registry
+- package-size aliases
+- package-size listing by category
+- package-size normalization by category
+- validation for package-size categories and gram-based package sizes
+- CLI tests for package-size listing, normalization, and category-aware matching
+
 ## v0.2.0 - Product Type Aliases
 
 Status: complete.

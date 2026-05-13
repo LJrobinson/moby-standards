@@ -1,4 +1,8 @@
 weights:
+  - label: "0.3g"
+    grams: 0.3
+    category_hint: ["vape"]
+
   - label: "0.5g"
     grams: 0.5
     category_hint: ["pre_roll", "vape", "concentrate"]
@@ -6,6 +10,10 @@ weights:
   - label: "1g"
     grams: 1.0
     category_hint: ["flower", "pre_roll", "vape", "concentrate"]
+
+  - label: "1.5g"
+    grams: 1.5
+    category_hint: ["pre_roll"]
 
   - label: "2g"
     grams: 2.0

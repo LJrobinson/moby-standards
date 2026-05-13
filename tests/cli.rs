@@ -44,6 +44,56 @@ fn unknown_weight_returns_unmatched_result() {
 }
 
 #[test]
+fn lists_flower_package_sizes() {
+    let mut cmd = Command::cargo_bin("moby-standards").unwrap();
+
+    cmd.args(["list", "package-sizes", "flower"])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("3.5g"));
+}
+
+#[test]
+fn normalizes_flower_eighth_package_size() {
+    let mut cmd = Command::cargo_bin("moby-standards").unwrap();
+
+    cmd.args(["normalize", "package-size", "flower", "eighth"])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("\"canonical\": \"3.5g\""));
+}
+
+#[test]
+fn normalizes_vape_half_gram_package_size() {
+    let mut cmd = Command::cargo_bin("moby-standards").unwrap();
+
+    cmd.args(["normalize", "package-size", "vape", "half gram"])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("\"canonical\": \"0.5g\""));
+}
+
+#[test]
+fn normalizes_edible_package_size() {
+    let mut cmd = Command::cargo_bin("moby-standards").unwrap();
+
+    cmd.args(["normalize", "package-size", "edible", "100mg package"])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("\"canonical\": \"100mg_package\""));
+}
+
+#[test]
+fn package_size_must_be_valid_for_category() {
+    let mut cmd = Command::cargo_bin("moby-standards").unwrap();
+
+    cmd.args(["normalize", "package-size", "vape", "eighth"])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("\"matched\": false"));
+}
+
+#[test]
 fn normalizes_infused_joint_to_infused_pre_roll() {
     let mut cmd = Command::cargo_bin("moby-standards").unwrap();
 
