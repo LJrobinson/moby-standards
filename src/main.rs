@@ -5,7 +5,8 @@ mod registry;
 use anyhow::Result;
 use clap::{Parser, Subcommand, ValueEnum};
 use normalize::{
-    normalize_category, normalize_package_size, normalize_product_type, normalize_weight,
+    normalize_category, normalize_package_size, normalize_potency_field, normalize_product_type,
+    normalize_weight,
 };
 use registry::Registry;
 
@@ -13,7 +14,7 @@ use registry::Registry;
 #[command(name = "moby-standards")]
 #[command(about = "Canonical YAML-backed cannabis standards for MOBY")]
 #[command(
-    long_about = "Canonical YAML-backed cannabis standards for MOBY.\n\nSupports listing registries, normalizing weights, categories, product types, and category-aware package sizes, validating YAML data, and exporting loaded standards as JSON."
+    long_about = "Canonical YAML-backed cannabis standards for MOBY.\n\nSupports listing registries, normalizing weights, categories, product types, category-aware package sizes, and potency fields, validating YAML data, and exporting loaded standards as JSON."
 )]
 #[command(version)]
 struct Cli {
@@ -62,6 +63,8 @@ enum ListKind {
     Units,
     ProductTypes,
     PackageSizes,
+    PotencyFields,
+    PotencyUnits,
 }
 
 #[derive(Copy, Clone, Debug, ValueEnum)]
@@ -70,6 +73,7 @@ enum NormalizeKind {
     Category,
     ProductType,
     PackageSize,
+    PotencyField,
 }
 
 fn main() -> Result<()> {
@@ -116,6 +120,18 @@ fn main() -> Result<()> {
                     println!("{}", size);
                 }
             }
+            ListKind::PotencyFields => {
+                reject_category_argument(category)?;
+                for potency_field in registry.potency_fields.potency_fields {
+                    println!("{} - {}", potency_field.key, potency_field.label);
+                }
+            }
+            ListKind::PotencyUnits => {
+                reject_category_argument(category)?;
+                for potency_unit in registry.potency_units.potency_units {
+                    println!("{} - {}", potency_unit.key, potency_unit.label);
+                }
+            }
         },
 
         Commands::Normalize {
@@ -142,6 +158,10 @@ fn main() -> Result<()> {
                     };
                     normalize_package_size(&registry, &category_or_input, &input)
                 }
+                NormalizeKind::PotencyField => {
+                    reject_package_size_input(input)?;
+                    normalize_potency_field(&registry, &category_or_input)
+                }
             };
 
             println!("{}", serde_json::to_string_pretty(&result)?);
@@ -159,10 +179,13 @@ fn main() -> Result<()> {
                 "units": registry.units.units,
                 "product_types": registry.product_types.product_types,
                 "package_sizes": registry.package_sizes.package_sizes,
+                "potency_fields": registry.potency_fields.potency_fields,
+                "potency_units": registry.potency_units.potency_units,
                 "weight_aliases": registry.weight_aliases.aliases,
                 "category_aliases": registry.category_aliases.aliases,
                 "product_type_aliases": registry.product_type_aliases.aliases,
                 "package_size_aliases": registry.package_size_aliases.aliases,
+                "potency_field_aliases": registry.potency_field_aliases.aliases,
             });
 
             println!("{}", serde_json::to_string_pretty(&export)?);

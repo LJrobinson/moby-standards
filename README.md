@@ -2,7 +2,7 @@
 
 Canonical cannabis data standards for MOBY.
 
-`moby-standards` v0.3.0 provides a Rust CLI and YAML-backed registries for canonical cannabis weights, package sizes, categories, units, product types, and aliases.
+`moby-standards` v0.4.0 provides a Rust CLI and YAML-backed registries for canonical cannabis weights, package sizes, categories, units, product types, potency fields, potency units, and aliases.
 
 It is designed to help cannabis data tools convert messy POS, compliance, menu, COA, and state-specific source data into consistent MOBY-compatible output.
 
@@ -50,11 +50,22 @@ v0.3.0 Package Size Standards is complete and adds:
 - package-size normalization by category
 - validation that package-size categories and gram-based package sizes are canonical
 
+v0.4.0 Potency Units is complete and adds:
+
+- canonical THC/CBD-related potency fields
+- canonical potency units
+- potency-field aliases
+- potency-field normalization
+- potency field/unit listing
+- validation that potency-field aliases point to canonical potency fields
+
 Canonical weights are global. Package sizes are category-aware.
 
 For example, `3.5g` is a canonical weight and a recognized flower package size. `0.5g` is a recognized vape, concentrate, and pre-roll package size. `100mg_package` is an edible package-size token, not a mass weight.
 
-The loaded YAML registries currently include canonical weights, package sizes, categories, units, product types, weight aliases, category aliases, product-type aliases, and package-size aliases.
+Potency fields are canonical field names for cannabinoid and terpene values. For example, `Total Potential THC` normalizes to `total_thc`, while `Delta-9 THC` normalizes to `thc`.
+
+The loaded YAML registries currently include canonical weights, package sizes, categories, units, product types, potency fields, potency units, weight aliases, category aliases, product-type aliases, package-size aliases, and potency-field aliases.
 
 ## Commands
 
@@ -88,6 +99,18 @@ List package sizes for a category:
 cargo run -- list package-sizes flower
 ```
 
+List potency fields:
+
+```bash
+cargo run -- list potency-fields
+```
+
+List potency units:
+
+```bash
+cargo run -- list potency-units
+```
+
 Normalize a weight:
 
 ```bash
@@ -114,6 +137,12 @@ cargo run -- normalize package-size flower eighth
 
 ```bash
 cargo run -- normalize package-size edible "100mg package"
+```
+
+Normalize a potency field:
+
+```bash
+cargo run -- normalize potency-field "Total Potential THC"
 ```
 
 The normalize kind determines the registry used. For example, `normalize category cart` returns `vape`, while `normalize product-type cart` returns `vape_cartridge`.
@@ -161,6 +190,18 @@ Package Size Example Output
   "input": "eighth",
   "kind": "package-size",
   "canonical": "3.5g",
+  "confidence": "high",
+  "matched": true
+}
+```
+
+Potency Field Example Output
+
+```bash
+{
+  "input": "Total Potential THC",
+  "kind": "potency-field",
+  "canonical": "total_thc",
   "confidence": "high",
   "matched": true
 }

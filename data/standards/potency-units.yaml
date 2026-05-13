@@ -1,0 +1,18 @@
+potency_units:
+  - key: "percent"
+    label: "percent"
+
+  - key: "mg_per_g"
+    label: "milligrams per gram"
+
+  - key: "mg_per_package"
+    label: "milligrams per package"
+
+  - key: "mg_per_serving"
+    label: "milligrams per serving"
+
+  - key: "mg"
+    label: "milligram"
+
+  - key: "mg_per_ml"
+    label: "milligrams per milliliter"

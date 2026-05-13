@@ -1,5 +1,19 @@
 # MOBY Standards Progress Log
 
+## v0.4.0 - Potency Units
+
+Status: complete.
+
+Implemented:
+
+- canonical potency fields
+- canonical potency units
+- potency-field aliases
+- potency-field normalization
+- potency field and potency unit list commands
+- validation for potency-field aliases and duplicate potency keys
+- CLI tests for potency-field normalization, potency unit listing, and validation
+
 ## v0.3.0 - Package Size Standards
 
 Status: complete.

@@ -49,6 +49,28 @@ pub struct PackageSizeRegistry {
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
+pub struct PotencyFieldRegistry {
+    pub potency_fields: Vec<StandardPotencyField>,
+}
+
+#[derive(Debug, Deserialize, Serialize, Clone)]
+pub struct StandardPotencyField {
+    pub key: String,
+    pub label: String,
+}
+
+#[derive(Debug, Deserialize, Serialize, Clone)]
+pub struct PotencyUnitRegistry {
+    pub potency_units: Vec<StandardPotencyUnit>,
+}
+
+#[derive(Debug, Deserialize, Serialize, Clone)]
+pub struct StandardPotencyUnit {
+    pub key: String,
+    pub label: String,
+}
+
+#[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct StandardProductType {
     pub key: String,
     pub category: String,

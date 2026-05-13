@@ -1,0 +1,36 @@
+potency_fields:
+  - key: "thc"
+    label: "THC"
+
+  - key: "thca"
+    label: "THCA"
+
+  - key: "total_thc"
+    label: "Total THC"
+
+  - key: "cbd"
+    label: "CBD"
+
+  - key: "cbda"
+    label: "CBDA"
+
+  - key: "total_cbd"
+    label: "Total CBD"
+
+  - key: "cbg"
+    label: "CBG"
+
+  - key: "cbga"
+    label: "CBGA"
+
+  - key: "cbn"
+    label: "CBN"
+
+  - key: "cbc"
+    label: "CBC"
+
+  - key: "total_cannabinoids"
+    label: "Total Cannabinoids"
+
+  - key: "total_terpenes"
+    label: "Total Terpenes"

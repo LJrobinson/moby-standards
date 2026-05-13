@@ -54,6 +54,14 @@ pub fn normalize_package_size(registry: &Registry, category: &str, input: &str) 
     }
 }
 
+pub fn normalize_potency_field(registry: &Registry, input: &str) -> NormalizeResult {
+    normalize_alias(
+        "potency-field",
+        &registry.potency_field_aliases.aliases,
+        input,
+    )
+}
+
 fn normalize_alias(kind: &str, aliases: &[AliasEntry], input: &str) -> NormalizeResult {
     let normalized_input = normalize_text(input);
 

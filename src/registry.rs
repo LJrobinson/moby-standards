@@ -4,8 +4,8 @@ use std::collections::HashSet;
 use std::fs;
 
 use crate::models::{
-    AliasRegistry, CategoryRegistry, PackageSizeRegistry, ProductTypeRegistry, UnitRegistry,
-    WeightRegistry,
+    AliasRegistry, CategoryRegistry, PackageSizeRegistry, PotencyFieldRegistry,
+    PotencyUnitRegistry, ProductTypeRegistry, UnitRegistry, WeightRegistry,
 };
 
 pub struct Registry {
@@ -14,10 +14,13 @@ pub struct Registry {
     pub units: UnitRegistry,
     pub product_types: ProductTypeRegistry,
     pub package_sizes: PackageSizeRegistry,
+    pub potency_fields: PotencyFieldRegistry,
+    pub potency_units: PotencyUnitRegistry,
     pub weight_aliases: AliasRegistry,
     pub category_aliases: AliasRegistry,
     pub product_type_aliases: AliasRegistry,
     pub package_size_aliases: AliasRegistry,
+    pub potency_field_aliases: AliasRegistry,
 }
 
 impl Registry {
@@ -28,10 +31,13 @@ impl Registry {
             units: load_yaml("data/standards/units.yaml")?,
             product_types: load_yaml("data/standards/product-types.yaml")?,
             package_sizes: load_yaml("data/standards/package-sizes.yaml")?,
+            potency_fields: load_yaml("data/standards/potency-fields.yaml")?,
+            potency_units: load_yaml("data/standards/potency-units.yaml")?,
             weight_aliases: load_yaml("data/aliases/weights.yaml")?,
             category_aliases: load_yaml("data/aliases/categories.yaml")?,
             product_type_aliases: load_yaml("data/aliases/product-types.yaml")?,
             package_size_aliases: load_yaml("data/aliases/package-sizes.yaml")?,
+            potency_field_aliases: load_yaml("data/aliases/potency-fields.yaml")?,
         })
     }
 
@@ -250,6 +256,58 @@ impl Registry {
             if !package_size_tokens.contains(alias.canonical.as_str()) {
                 anyhow::bail!(
                     "Package size alias '{}' points to missing package size '{}'",
+                    alias.input,
+                    alias.canonical
+                );
+            }
+        }
+
+        let mut potency_field_keys = HashSet::new();
+        for potency_field in &self.potency_fields.potency_fields {
+            if potency_field.key.trim().is_empty() {
+                anyhow::bail!("Potency field has empty key");
+            }
+            if potency_field.label.trim().is_empty() {
+                anyhow::bail!("Potency field '{}' has empty label", potency_field.key);
+            }
+            if !potency_field_keys.insert(potency_field.key.as_str()) {
+                anyhow::bail!("Duplicate potency field key '{}'", potency_field.key);
+            }
+        }
+
+        let mut potency_unit_keys = HashSet::new();
+        for potency_unit in &self.potency_units.potency_units {
+            if potency_unit.key.trim().is_empty() {
+                anyhow::bail!("Potency unit has empty key");
+            }
+            if potency_unit.label.trim().is_empty() {
+                anyhow::bail!("Potency unit '{}' has empty label", potency_unit.key);
+            }
+            if !potency_unit_keys.insert(potency_unit.key.as_str()) {
+                anyhow::bail!("Duplicate potency unit key '{}'", potency_unit.key);
+            }
+        }
+
+        let mut potency_field_alias_inputs = HashSet::new();
+        for alias in &self.potency_field_aliases.aliases {
+            if alias.input.trim().is_empty() {
+                anyhow::bail!("Potency field alias has empty input");
+            }
+            if alias.canonical.trim().is_empty() {
+                anyhow::bail!(
+                    "Potency field alias '{}' has empty canonical value",
+                    alias.input
+                );
+            }
+            if alias.confidence.trim().is_empty() {
+                anyhow::bail!("Potency field alias '{}' has empty confidence", alias.input);
+            }
+            if !potency_field_alias_inputs.insert(alias.input.as_str()) {
+                anyhow::bail!("Duplicate potency field alias input '{}'", alias.input);
+            }
+            if !potency_field_keys.contains(alias.canonical.as_str()) {
+                anyhow::bail!(
+                    "Potency field alias '{}' points to missing canonical potency field '{}'",
                     alias.input,
                     alias.canonical
                 );

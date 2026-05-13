@@ -1,0 +1,48 @@
+aliases:
+  - input: "THC"
+    canonical: "thc"
+    confidence: "high"
+
+  - input: "Delta-9 THC"
+    canonical: "thc"
+    confidence: "high"
+
+  - input: "Δ9-THC"
+    canonical: "thc"
+    confidence: "high"
+
+  - input: "THCA"
+    canonical: "thca"
+    confidence: "high"
+
+  - input: "Total THC"
+    canonical: "total_thc"
+    confidence: "high"
+
+  - input: "Total Potential THC"
+    canonical: "total_thc"
+    confidence: "high"
+
+  - input: "CBD"
+    canonical: "cbd"
+    confidence: "high"
+
+  - input: "CBDA"
+    canonical: "cbda"
+    confidence: "high"
+
+  - input: "Total CBD"
+    canonical: "total_cbd"
+    confidence: "high"
+
+  - input: "Total Potential CBD"
+    canonical: "total_cbd"
+    confidence: "high"
+
+  - input: "Total Cannabinoids"
+    canonical: "total_cannabinoids"
+    confidence: "high"
+
+  - input: "Total Terpenes"
+    canonical: "total_terpenes"
+    confidence: "high"

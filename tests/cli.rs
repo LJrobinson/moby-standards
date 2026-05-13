@@ -94,6 +94,52 @@ fn package_size_must_be_valid_for_category() {
 }
 
 #[test]
+fn lists_potency_units() {
+    let mut cmd = Command::cargo_bin("moby-standards").unwrap();
+
+    cmd.args(["list", "potency-units"])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("percent"));
+}
+
+#[test]
+fn normalizes_total_potential_thc_to_total_thc() {
+    let mut cmd = Command::cargo_bin("moby-standards").unwrap();
+
+    cmd.args(["normalize", "potency-field", "Total Potential THC"])
+        .assert()
+        .success()
+        .stdout(
+            predicate::str::contains("\"kind\": \"potency-field\"")
+                .and(predicate::str::contains("\"canonical\": \"total_thc\""))
+                .and(predicate::str::contains("\"matched\": true")),
+        );
+}
+
+#[test]
+fn normalizes_delta_nine_thc_to_thc() {
+    let mut cmd = Command::cargo_bin("moby-standards").unwrap();
+
+    cmd.args(["normalize", "potency-field", "Delta-9 THC"])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("\"canonical\": \"thc\""));
+}
+
+#[test]
+fn normalizes_total_terpenes_to_total_terpenes() {
+    let mut cmd = Command::cargo_bin("moby-standards").unwrap();
+
+    cmd.args(["normalize", "potency-field", "Total Terpenes"])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains(
+            "\"canonical\": \"total_terpenes\"",
+        ));
+}
+
+#[test]
 fn normalizes_infused_joint_to_infused_pre_roll() {
     let mut cmd = Command::cargo_bin("moby-standards").unwrap();
 
