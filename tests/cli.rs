@@ -24,6 +24,35 @@ fn normalizes_eighth_to_three_point_five_grams() {
 }
 
 #[test]
+fn normalizes_weight_eighth_with_source_metadata() {
+    let mut cmd = Command::cargo_bin("moby-standards").unwrap();
+
+    cmd.args(["normalize", "weight", "eighth"])
+        .assert()
+        .success()
+        .stdout(
+            predicate::str::contains("\"source\"")
+                .and(predicate::str::contains("\"type\": \"retail_common_term\""))
+                .and(predicate::str::contains(
+                    "\"note\": \"Common cannabis retail shorthand.\"",
+                )),
+        );
+}
+
+#[test]
+fn aliases_without_source_metadata_still_normalize() {
+    let mut cmd = Command::cargo_bin("moby-standards").unwrap();
+
+    cmd.args(["normalize", "weight", "half gram"])
+        .assert()
+        .success()
+        .stdout(
+            predicate::str::contains("\"canonical\": \"0.5g\"")
+                .and(predicate::str::contains("\"source\"").not()),
+        );
+}
+
+#[test]
 fn normalizes_cart_to_vape() {
     let mut cmd = Command::cargo_bin("moby-standards").unwrap();
 

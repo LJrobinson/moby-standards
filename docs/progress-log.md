@@ -1,5 +1,18 @@
 # MOBY Standards Progress Log
 
+## v0.6.0 - Source Mapping Metadata
+
+Status: complete.
+
+Implemented:
+
+- optional source metadata on alias entries
+- normalization output source metadata when a matched alias provides it
+- backward compatibility for aliases without source metadata
+- validation for source metadata type and optional note shape
+- starter source metadata on selected retail and regulatory common aliases
+- CLI and unit tests for source metadata output, compatibility, validation, and malformed metadata rejection
+
 ## v0.5.0 - State Overrides
 
 Status: complete.

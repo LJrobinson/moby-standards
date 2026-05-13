@@ -22,6 +22,9 @@ aliases:
   - input: "cart"
     canonical: "vape_cartridge"
     confidence: "high"
+    source:
+      type: "retail_common_term"
+      note: "Common cannabis retail shorthand."
 
   - input: "cartridge"
     canonical: "vape_cartridge"

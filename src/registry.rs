@@ -5,7 +5,7 @@ use std::fs;
 use std::path::Path;
 
 use crate::models::{
-    AliasRegistry, CategoryRegistry, PackageSizeRegistry, PotencyFieldRegistry,
+    AliasEntry, AliasRegistry, CategoryRegistry, PackageSizeRegistry, PotencyFieldRegistry,
     PotencyUnitRegistry, ProductTypeRegistry, StatePackageSizeOverride, UnitRegistry,
     WeightRegistry,
 };
@@ -138,6 +138,7 @@ impl Registry {
             if alias.confidence.trim().is_empty() {
                 anyhow::bail!("Weight alias '{}' has empty confidence", alias.input);
             }
+            validate_alias_source("Weight alias", alias)?;
             if !weight_alias_inputs.insert(alias.input.as_str()) {
                 anyhow::bail!("Duplicate weight alias input '{}'", alias.input);
             }
@@ -161,6 +162,7 @@ impl Registry {
             if alias.confidence.trim().is_empty() {
                 anyhow::bail!("Category alias '{}' has empty confidence", alias.input);
             }
+            validate_alias_source("Category alias", alias)?;
             if !category_alias_inputs.insert(alias.input.as_str()) {
                 anyhow::bail!("Duplicate category alias input '{}'", alias.input);
             }
@@ -187,6 +189,7 @@ impl Registry {
             if alias.confidence.trim().is_empty() {
                 anyhow::bail!("Product type alias '{}' has empty confidence", alias.input);
             }
+            validate_alias_source("Product type alias", alias)?;
             if !product_type_alias_inputs.insert(alias.input.as_str()) {
                 anyhow::bail!("Duplicate product type alias input '{}'", alias.input);
             }
@@ -254,6 +257,7 @@ impl Registry {
             if alias.confidence.trim().is_empty() {
                 anyhow::bail!("Package size alias '{}' has empty confidence", alias.input);
             }
+            validate_alias_source("Package size alias", alias)?;
             if !package_size_alias_inputs.insert(alias.input.as_str()) {
                 anyhow::bail!("Duplicate package size alias input '{}'", alias.input);
             }
@@ -306,6 +310,7 @@ impl Registry {
             if alias.confidence.trim().is_empty() {
                 anyhow::bail!("Potency field alias '{}' has empty confidence", alias.input);
             }
+            validate_alias_source("Potency field alias", alias)?;
             if !potency_field_alias_inputs.insert(alias.input.as_str()) {
                 anyhow::bail!("Duplicate potency field alias input '{}'", alias.input);
             }
@@ -399,6 +404,24 @@ fn is_gram_size_token(value: &str) -> bool {
         .is_some()
 }
 
+fn validate_alias_source(alias_kind: &str, alias: &AliasEntry) -> Result<()> {
+    let Some(source) = &alias.source else {
+        return Ok(());
+    };
+
+    if source.source_type.trim().is_empty() {
+        anyhow::bail!("{} '{}' has empty source type", alias_kind, alias.input);
+    }
+
+    if let Some(note) = &source.note {
+        if note.trim().is_empty() {
+            anyhow::bail!("{} '{}' has empty source note", alias_kind, alias.input);
+        }
+    }
+
+    Ok(())
+}
+
 fn load_yaml<T>(path: &str) -> Result<T>
 where
     T: DeserializeOwned,
@@ -449,4 +472,43 @@ fn load_state_package_size_overrides(
     }
 
     Ok(overrides)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::validate_alias_source;
+    use crate::models::{AliasEntry, AliasSource};
+
+    fn alias_with_source(source: AliasSource) -> AliasEntry {
+        AliasEntry {
+            input: "test".to_string(),
+            canonical: "canonical".to_string(),
+            confidence: "high".to_string(),
+            source: Some(source),
+        }
+    }
+
+    #[test]
+    fn rejects_empty_alias_source_type() {
+        let alias = alias_with_source(AliasSource {
+            source_type: " ".to_string(),
+            state: None,
+            authority: None,
+            note: Some("Useful source note.".to_string()),
+        });
+
+        assert!(validate_alias_source("Test alias", &alias).is_err());
+    }
+
+    #[test]
+    fn rejects_empty_alias_source_note_when_present() {
+        let alias = alias_with_source(AliasSource {
+            source_type: "retail_common_term".to_string(),
+            state: None,
+            authority: None,
+            note: Some(" ".to_string()),
+        });
+
+        assert!(validate_alias_source("Test alias", &alias).is_err());
+    }
 }

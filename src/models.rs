@@ -101,6 +101,20 @@ pub struct AliasEntry {
     pub input: String,
     pub canonical: String,
     pub confidence: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub source: Option<AliasSource>,
+}
+
+#[derive(Debug, Deserialize, Serialize, Clone)]
+pub struct AliasSource {
+    #[serde(rename = "type")]
+    pub source_type: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub state: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub authority: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub note: Option<String>,
 }
 
 #[derive(Debug, Serialize)]
@@ -109,5 +123,7 @@ pub struct NormalizeResult {
     pub kind: String,
     pub canonical: Option<String>,
     pub confidence: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub source: Option<AliasSource>,
     pub matched: bool,
 }

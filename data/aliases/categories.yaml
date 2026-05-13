@@ -2,6 +2,9 @@ aliases:
   - input: "usable cannabis"
     canonical: "flower"
     confidence: "high"
+    source:
+      type: "regulatory_common_term"
+      note: "Common regulatory category term."
 
   - input: "usable marijuana"
     canonical: "flower"
@@ -46,6 +49,9 @@ aliases:
   - input: "cart"
     canonical: "vape"
     confidence: "high"
+    source:
+      type: "retail_common_term"
+      note: "Common cannabis retail shorthand."
 
   - input: "cartridge"
     canonical: "vape"

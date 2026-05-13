@@ -18,6 +18,9 @@ aliases:
   - input: "eighth"
     canonical: "3.5g"
     confidence: "high"
+    source:
+      type: "retail_common_term"
+      note: "Common cannabis retail shorthand."
 
   - input: "1/8"
     canonical: "3.5g"
@@ -62,6 +65,9 @@ aliases:
   - input: "zip"
     canonical: "28g"
     confidence: "medium"
+    source:
+      type: "retail_common_term"
+      note: "Common cannabis retail shorthand."
 
   - input: "two ounces"
     canonical: "56g"

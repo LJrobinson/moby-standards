@@ -30,14 +30,18 @@ pub fn normalize_package_size(registry: &Registry, category: &str, input: &str) 
         .find(|alias| normalize_text(&alias.input) == normalized_input);
 
     let matched = match matched_alias {
-        Some(alias) => Some((alias.canonical.clone(), alias.confidence.clone())),
+        Some(alias) => Some((
+            alias.canonical.clone(),
+            alias.confidence.clone(),
+            alias.source.clone(),
+        )),
         None => category_sizes
             .iter()
             .find(|size| normalize_text(size) == normalized_input)
-            .map(|size| (size.clone(), "high".to_string())),
+            .map(|size| (size.clone(), "high".to_string(), None)),
     };
 
-    let Some((canonical, confidence)) = matched else {
+    let Some((canonical, confidence, source)) = matched else {
         return unmatched("package-size", input);
     };
 
@@ -47,6 +51,7 @@ pub fn normalize_package_size(registry: &Registry, category: &str, input: &str) 
             kind: "package-size".to_string(),
             canonical: Some(canonical),
             confidence: Some(confidence),
+            source,
             matched: true,
         }
     } else {
@@ -75,6 +80,7 @@ fn normalize_alias(kind: &str, aliases: &[AliasEntry], input: &str) -> Normalize
             kind: kind.to_string(),
             canonical: Some(alias.canonical.clone()),
             confidence: Some(alias.confidence.clone()),
+            source: alias.source.clone(),
             matched: true,
         },
         None => unmatched(kind, input),
@@ -87,6 +93,7 @@ fn unmatched(kind: &str, input: &str) -> NormalizeResult {
         kind: kind.to_string(),
         canonical: None,
         confidence: None,
+        source: None,
         matched: false,
     }
 }
