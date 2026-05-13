@@ -1,0 +1,68 @@
+product_types:
+  - key: "cured_flower"
+    category: "flower"
+    label: "Cured Flower"
+
+  - key: "popcorn_flower"
+    category: "flower"
+    label: "Popcorn Flower"
+
+  - key: "shake"
+    category: "flower"
+    label: "Shake"
+
+  - key: "trim"
+    category: "flower"
+    label: "Trim"
+
+  - key: "pre_roll"
+    category: "pre_roll"
+    label: "Pre-Roll"
+
+  - key: "infused_pre_roll"
+    category: "pre_roll"
+    label: "Infused Pre-Roll"
+
+  - key: "vape_cartridge"
+    category: "vape"
+    label: "Vape Cartridge"
+
+  - key: "vape_disposable"
+    category: "vape"
+    label: "Vape Disposable"
+
+  - key: "live_resin"
+    category: "concentrate"
+    label: "Live Resin"
+
+  - key: "live_rosin"
+    category: "concentrate"
+    label: "Live Rosin"
+
+  - key: "distillate"
+    category: "concentrate"
+    label: "Distillate"
+
+  - key: "gummy"
+    category: "edible"
+    label: "Gummy"
+
+  - key: "chocolate"
+    category: "edible"
+    label: "Chocolate"
+
+  - key: "beverage"
+    category: "beverage"
+    label: "Beverage"
+
+  - key: "topical"
+    category: "topical"
+    label: "Topical"
+
+  - key: "tincture"
+    category: "tincture"
+    label: "Tincture"
+
+  - key: "capsule"
+    category: "capsule"
+    label: "Capsule"

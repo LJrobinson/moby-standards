@@ -1,0 +1,36 @@
+weights:
+  - label: "0.5g"
+    grams: 0.5
+    category_hint: ["pre_roll", "vape", "concentrate"]
+
+  - label: "1g"
+    grams: 1.0
+    category_hint: ["flower", "pre_roll", "vape", "concentrate"]
+
+  - label: "2g"
+    grams: 2.0
+    category_hint: ["pre_roll", "vape", "concentrate"]
+
+  - label: "3.5g"
+    grams: 3.5
+    category_hint: ["flower"]
+
+  - label: "7g"
+    grams: 7.0
+    category_hint: ["flower"]
+
+  - label: "14g"
+    grams: 14.0
+    category_hint: ["flower"]
+
+  - label: "28g"
+    grams: 28.0
+    category_hint: ["flower"]
+
+  - label: "56g"
+    grams: 56.0
+    category_hint: ["flower"]
+
+  - label: "70g"
+    grams: 70.0
+    category_hint: ["flower"]

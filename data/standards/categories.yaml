@@ -1,0 +1,40 @@
+categories:
+  - key: "flower"
+    label: "Flower"
+    description: "Usable cannabis flower or plant material intended for retail sale."
+
+  - key: "pre_roll"
+    label: "Pre-Roll"
+    description: "Rolled cannabis product, infused or non-infused."
+
+  - key: "vape"
+    label: "Vape"
+    description: "Vaporizer cartridges, disposables, pods, and related oil-based inhalable products."
+
+  - key: "concentrate"
+    label: "Concentrate"
+    description: "Extracted cannabis products such as rosin, resin, wax, shatter, badder, crumble, and distillate."
+
+  - key: "edible"
+    label: "Edible"
+    description: "Ingestible cannabis products such as gummies, chocolates, baked goods, and candies."
+
+  - key: "beverage"
+    label: "Beverage"
+    description: "Drinkable cannabis products."
+
+  - key: "topical"
+    label: "Topical"
+    description: "Externally applied cannabis products."
+
+  - key: "tincture"
+    label: "Tincture"
+    description: "Liquid cannabis products typically administered orally or sublingually."
+
+  - key: "capsule"
+    label: "Capsule"
+    description: "Encapsulated cannabis products."
+
+  - key: "accessory"
+    label: "Accessory"
+    description: "Non-cannabis retail accessories."

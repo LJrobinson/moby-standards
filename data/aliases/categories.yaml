@@ -1,0 +1,100 @@
+aliases:
+  - input: "usable cannabis"
+    canonical: "flower"
+    confidence: "high"
+
+  - input: "usable marijuana"
+    canonical: "flower"
+    confidence: "high"
+
+  - input: "plant material"
+    canonical: "flower"
+    confidence: "high"
+
+  - input: "flower cured"
+    canonical: "flower"
+    confidence: "high"
+
+  - input: "bulk flower"
+    canonical: "flower"
+    confidence: "high"
+
+  - input: "bud"
+    canonical: "flower"
+    confidence: "medium"
+
+  - input: "joint"
+    canonical: "pre_roll"
+    confidence: "high"
+
+  - input: "pre roll"
+    canonical: "pre_roll"
+    confidence: "high"
+
+  - input: "pre-roll"
+    canonical: "pre_roll"
+    confidence: "high"
+
+  - input: "preroll"
+    canonical: "pre_roll"
+    confidence: "high"
+
+  - input: "infused pre roll"
+    canonical: "pre_roll"
+    confidence: "high"
+
+  - input: "cart"
+    canonical: "vape"
+    confidence: "high"
+
+  - input: "cartridge"
+    canonical: "vape"
+    confidence: "high"
+
+  - input: "disposable"
+    canonical: "vape"
+    confidence: "medium"
+
+  - input: "pod"
+    canonical: "vape"
+    confidence: "medium"
+
+  - input: "wax"
+    canonical: "concentrate"
+    confidence: "high"
+
+  - input: "shatter"
+    canonical: "concentrate"
+    confidence: "high"
+
+  - input: "rosin"
+    canonical: "concentrate"
+    confidence: "high"
+
+  - input: "resin"
+    canonical: "concentrate"
+    confidence: "high"
+
+  - input: "badder"
+    canonical: "concentrate"
+    confidence: "high"
+
+  - input: "crumble"
+    canonical: "concentrate"
+    confidence: "high"
+
+  - input: "gummy"
+    canonical: "edible"
+    confidence: "high"
+
+  - input: "gummies"
+    canonical: "edible"
+    confidence: "high"
+
+  - input: "chocolate"
+    canonical: "edible"
+    confidence: "high"
+
+  - input: "drink"
+    canonical: "beverage"
+    confidence: "medium"

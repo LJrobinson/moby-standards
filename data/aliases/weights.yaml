@@ -1,0 +1,76 @@
+aliases:
+  - input: "half gram"
+    canonical: "0.5g"
+    confidence: "high"
+
+  - input: "0.5 gram"
+    canonical: "0.5g"
+    confidence: "high"
+
+  - input: "gram"
+    canonical: "1g"
+    confidence: "high"
+
+  - input: "single gram"
+    canonical: "1g"
+    confidence: "high"
+
+  - input: "eighth"
+    canonical: "3.5g"
+    confidence: "high"
+
+  - input: "1/8"
+    canonical: "3.5g"
+    confidence: "high"
+
+  - input: "1/8 oz"
+    canonical: "3.5g"
+    confidence: "high"
+
+  - input: "eighth ounce"
+    canonical: "3.5g"
+    confidence: "high"
+
+  - input: "quarter"
+    canonical: "7g"
+    confidence: "high"
+
+  - input: "1/4"
+    canonical: "7g"
+    confidence: "high"
+
+  - input: "1/4 oz"
+    canonical: "7g"
+    confidence: "high"
+
+  - input: "half ounce"
+    canonical: "14g"
+    confidence: "high"
+
+  - input: "1/2 oz"
+    canonical: "14g"
+    confidence: "high"
+
+  - input: "ounce"
+    canonical: "28g"
+    confidence: "high"
+
+  - input: "oz"
+    canonical: "28g"
+    confidence: "medium"
+
+  - input: "zip"
+    canonical: "28g"
+    confidence: "medium"
+
+  - input: "two ounces"
+    canonical: "56g"
+    confidence: "high"
+
+  - input: "2 oz"
+    canonical: "56g"
+    confidence: "high"
+
+  - input: "2.5 oz"
+    canonical: "70g"
+    confidence: "high"

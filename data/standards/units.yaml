@@ -1,0 +1,36 @@
+units:
+  - key: "g"
+    label: "gram"
+    dimension: "mass"
+
+  - key: "mg"
+    label: "milligram"
+    dimension: "mass"
+
+  - key: "oz"
+    label: "ounce"
+    dimension: "mass"
+
+  - key: "%"
+    label: "percent"
+    dimension: "potency"
+
+  - key: "mg_per_g"
+    label: "milligrams per gram"
+    dimension: "potency"
+
+  - key: "mg_per_serving"
+    label: "milligrams per serving"
+    dimension: "potency"
+
+  - key: "mg_per_package"
+    label: "milligrams per package"
+    dimension: "potency"
+
+  - key: "each"
+    label: "each"
+    dimension: "count"
+
+  - key: "ml"
+    label: "milliliter"
+    dimension: "volume"
