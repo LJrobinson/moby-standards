@@ -1,5 +1,17 @@
 # MOBY Standards Progress Log
 
+## v0.7.0 - MOBY JSON Schema Export
+
+Status: complete.
+
+Implemented:
+
+- JSON Schema export command
+- TypeScript type definition export command
+- machine-readable schema for the standards bundle shape
+- schema coverage for aliases and optional source metadata
+- CLI tests for schema export, TypeScript export, existing JSON export, and validation
+
 ## v0.6.0 - Source Mapping Metadata
 
 Status: complete.

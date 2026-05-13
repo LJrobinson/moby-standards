@@ -2,7 +2,7 @@
 
 Canonical cannabis data standards for MOBY.
 
-`moby-standards` v0.6.0 provides a Rust CLI and YAML-backed registries for canonical cannabis weights, package sizes, categories, units, product types, potency fields, potency units, aliases, source metadata, and state-aware standards extensions.
+`moby-standards` v0.7.0 provides a Rust CLI and YAML-backed registries for canonical cannabis weights, package sizes, categories, units, product types, potency fields, potency units, aliases, source metadata, state-aware standards extensions, and machine-readable exports.
 
 It is designed to help cannabis data tools convert messy POS, compliance, menu, COA, and state-specific source data into consistent MOBY-compatible output.
 
@@ -73,6 +73,12 @@ v0.6.0 Source Mapping Metadata is complete and adds:
 - validation for source metadata shape
 - starter source metadata on selected aliases
 
+v0.7.0 MOBY JSON Schema Export is complete and adds:
+
+- JSON Schema export for the standards bundle
+- TypeScript type definition export
+- machine-readable references for other MOBY projects
+
 Canonical weights are global. Package sizes are category-aware.
 
 For example, `3.5g` is a canonical weight and a recognized flower package size. `0.5g` is a recognized vape, concentrate, and pre-roll package size. `100mg_package` is an edible package-size token, not a mass weight.
@@ -84,6 +90,8 @@ State overrides are state-specific MOBY Standards extensions that can reference 
 Alias `confidence` describes how strongly MOBY Standards trusts that a raw input maps to the canonical value. Alias `source` metadata is optional and can describe where a term comes from, such as a common retail shorthand or regulatory common term. Existing aliases do not need source metadata yet.
 
 The loaded YAML registries currently include canonical weights, package sizes, categories, units, product types, potency fields, potency units, state package-size overrides, weight aliases, category aliases, product-type aliases, package-size aliases, potency-field aliases, and selected alias source metadata.
+
+Other MOBY projects can consume the standards bundle directly as JSON, validate expected shape with the JSON Schema export, or use the TypeScript definitions as application-level contracts.
 
 ## Commands
 
@@ -181,6 +189,25 @@ Export all loaded standards and aliases as JSON:
 
 ```bash
 cargo run -- export-json
+```
+
+Export JSON Schema:
+
+```bash
+cargo run -- export-schema
+```
+
+Export TypeScript types:
+
+```bash
+cargo run -- export-typescript
+```
+
+Exports print to stdout, so they can be redirected into files:
+
+```bash
+cargo run -- export-schema > moby-standards.schema.json
+cargo run -- export-typescript > moby-standards.types.ts
 ```
 
 Example Output

@@ -1,3 +1,4 @@
+mod exports;
 mod models;
 mod normalize;
 mod registry;
@@ -67,6 +68,12 @@ enum Commands {
 
     /// Export all loaded standards and aliases as JSON.
     ExportJson,
+
+    /// Export a JSON Schema for the standards bundle.
+    ExportSchema,
+
+    /// Export TypeScript type definitions for MOBY Standards data.
+    ExportTypescript,
 }
 
 #[derive(Copy, Clone, Debug, ValueEnum)]
@@ -238,6 +245,14 @@ fn main() -> Result<()> {
             });
 
             println!("{}", serde_json::to_string_pretty(&export)?);
+        }
+
+        Commands::ExportSchema => {
+            println!("{}", exports::json_schema());
+        }
+
+        Commands::ExportTypescript => {
+            println!("{}", exports::typescript_definitions());
         }
     }
 

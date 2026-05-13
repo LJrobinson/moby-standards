@@ -196,6 +196,51 @@ fn unknown_state_override_request_fails_with_useful_error() {
 }
 
 #[test]
+fn export_schema_outputs_json_schema() {
+    let mut cmd = Command::cargo_bin("moby-standards").unwrap();
+
+    let output = cmd.arg("export-schema").output().unwrap();
+
+    assert!(output.status.success());
+    let schema: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
+    assert!(schema.get("$schema").is_some());
+}
+
+#[test]
+fn export_schema_includes_core_bundle_properties() {
+    let mut cmd = Command::cargo_bin("moby-standards").unwrap();
+
+    cmd.arg("export-schema").assert().success().stdout(
+        predicate::str::contains("\"weights\"")
+            .and(predicate::str::contains("\"categories\""))
+            .and(predicate::str::contains("\"product_types\"")),
+    );
+}
+
+#[test]
+fn export_typescript_outputs_type_definitions() {
+    let mut cmd = Command::cargo_bin("moby-standards").unwrap();
+
+    cmd.arg("export-typescript").assert().success().stdout(
+        predicate::str::contains("export type")
+            .and(predicate::str::contains("export interface StandardWeight"))
+            .and(predicate::str::contains("export interface AliasEntry"))
+            .and(predicate::str::contains("export interface NormalizeResult")),
+    );
+}
+
+#[test]
+fn export_json_still_outputs_standards_bundle() {
+    let mut cmd = Command::cargo_bin("moby-standards").unwrap();
+
+    cmd.arg("export-json").assert().success().stdout(
+        predicate::str::contains("\"weights\"")
+            .and(predicate::str::contains("\"categories\""))
+            .and(predicate::str::contains("\"product_types\"")),
+    );
+}
+
+#[test]
 fn normalizes_infused_joint_to_infused_pre_roll() {
     let mut cmd = Command::cargo_bin("moby-standards").unwrap();
 
